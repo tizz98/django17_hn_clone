@@ -5,10 +5,9 @@ from links.views import LinkListView
 urlpatterns = patterns('',
     url(r'^$', LinkListView.as_view(), name='home'),
 
-    url(r'^login/$', 'django.contrib.auth.views.login', {
-    'template_name': 'login.html'}, name="login"),
-	url(r'^logout/$', 'django.contrib.auth.views.logout_then_login',
-	    name="logout"),
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}, name="login"),
+	url(r'^logout/$', 'django.contrib.auth.views.logout_then_login', name="logout"),
+	url(r'^accounts/', include('registration.backends.simple.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
 )
