@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
 <ol>
 {% for link in object_list %}
     <li>
@@ -7,3 +10,4 @@
     </li>
 {% endfor %}
 </ol>
+{% endblock %}
