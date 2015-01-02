@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'links',
     'steelrumors',
+    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
