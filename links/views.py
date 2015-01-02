@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import get_user_model
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, CreateView
 from django.core.urlresolvers import reverse
 from .models import Link, UserProfile
-from .forms import UserProfileForm
+from .forms import UserProfileForm, LinkForm
 
 class LinkListView(ListView):
 	model       = Link
@@ -31,3 +31,15 @@ class UserProfileEditView(UpdateView):
 
 	def get_success_url(self):
 		return reverse("profile", kwargs={'slug': self.request.user})
+
+class LinkCreateView(CreateView):
+	model      = Link
+	form_class = LinkForm
+
+	def form_valid(self, form):
+		f = form.save(commit=False)
+		f.rank_score = 0.0
+		f.submitter = self.request.user
+		f.save()
+
+		return super(CreateView, self).form_valid(form)
