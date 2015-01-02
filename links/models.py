@@ -26,3 +26,10 @@ class Vote(models.Model):
 
 	def __unicode__(self):
 		return "%s upvoted %s" % (self.voter, self.link)
+
+class UserProfile(mdoels.Model):
+	user = models.OneToOneField(User, unique=True)
+	bio  = models.TextField(null=True)
+
+	def __unicode__(self):
+		return "%s's profile" % self.user
