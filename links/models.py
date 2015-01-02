@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Count
 
 # Create your models here.
 class Link(models.Model):
@@ -19,3 +20,7 @@ class Vote(models.Model):
 
 	def __unicode__(self):
 		return "%s upvoted %s" % (self.voter, self.link)
+
+class LinkVoteCountManager(models.Model):
+	def get_query_set(self):
+		return super(LinkVoteCountManager, self).get_query_set().annotate(votes=Count('vote')).order_by('-votes')
