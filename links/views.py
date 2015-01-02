@@ -30,4 +30,4 @@ class UserProfileEditView(UpdateView):
 		return UserProfile.objects.get_or_create(user=self.request.user)[0]
 
 	def get_success_url(self):
-		return reverse("profile", kwargs={'slug', self.request.user})
+		return reverse("profile", kwargs={'slug': self.request.user})
