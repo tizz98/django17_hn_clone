@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 	url(r'^users/(?P<slug>\w+)/$', UserProfileDetailView.as_view(), name='profile'),
 	url(r'^edit_profile/$', auth(UserProfileEditView.as_view()), name="edit_profile"),
 
-	url(r'^link/create/$', auth(LinkCreateView.as_view()), name="link_create")
+	url(r'^link/create/$', auth(LinkCreateView.as_view()), name="link_create"),
 
     url(r'^admin/', include(admin.site.urls)),
 )
