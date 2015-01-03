@@ -47,7 +47,7 @@ class LinkCreateView(CreateView):
 class LinkDetailView(DetailView):
 	model = Link
 
-class LinkUpdateview(UpdateView):
+class LinkUpdateView(UpdateView):
 	model      = Link
 	form_class = LinkForm
 
