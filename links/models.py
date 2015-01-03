@@ -2,10 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Count
 from django.core.urlresolvers import reverse
+from django.utils.timezone import now
 
 class LinkVoteCountManager(models.Manager):
 	def get_queryset(self):
-		return super(LinkVoteCountManager, self).get_queryset().annotate(votes=Count('vote')).order_by('-votes')
+		return super(LinkVoteCountManager, self).get_queryset().annotate(votes=Count('vote')).order_by('-rank_score','-votes')
 
 class Link(models.Model):
 	title        = models.CharField("Headline", max_length=100)
@@ -23,6 +24,16 @@ class Link(models.Model):
 
 	def get_absolute_url(self):
 		return reverse("link_detail", kwargs={'pk': str(self.id)})
+
+	def set_rank(self):
+		SECS_IN_HOUR = float(60*60)
+		GRAVITY      = 1.2
+
+		delta = now() - self.submitted_on
+		item_hour_age = delta.total_seconds() // SECS_IN_HOUR
+		votes = self.votes - 1
+		self.rank_score = votes / pow((item_hour_age+2), GRAVITY)
+		self.save()
 
 class Vote(models.Model):
 	voter = models.ForeignKey(User)
