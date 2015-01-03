@@ -21,4 +21,7 @@
     {% endif %}
 </div>
 {% endif %}
+<blockquote style="background-color: #ddd; padding: 4px; border-radius: 10px; margin: 10px 0; color: #666; font-size: smaller; text-shadow: rgba(255,255,255,0.8) 1px 1px 0;">
+{{ randomquip.comment|truncatechars:140 }}
+</blockquote>
 {% endblock %}
