@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from links.views import LinkListView, UserProfileDetailView, UserProfileEditView
+from links.views import LinkListView, UserProfileDetailView, UserProfileEditView, LinkCreateView
 from django.contrib.auth.decorators import login_required as auth
 
 urlpatterns = patterns('',
@@ -8,9 +8,12 @@ urlpatterns = patterns('',
 
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}, name="login"),
 	url(r'^logout/$', 'django.contrib.auth.views.logout_then_login', name="logout"),
+
 	url(r'^accounts/', include('registration.backends.simple.urls')),
 	url(r'^users/(?P<slug>\w+)/$', UserProfileDetailView.as_view(), name='profile'),
 	url(r'^edit_profile/$', auth(UserProfileEditView.as_view()), name="edit_profile"),
+
+	url(r'^link/create/$', auth(LinkCreateView.as_view()), name="link_create")
 
     url(r'^admin/', include(admin.site.urls)),
 )
