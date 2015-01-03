@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 from django.views.generic.edit import UpdateView, CreateView, DeleteView, FormView
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.comments.models import Comment
+import json
+from django.http import HttpResponse
 from .models import Link, UserProfile, Vote
 from .forms import UserProfileForm, LinkForm, VoteForm
 
@@ -62,24 +64,40 @@ class LinkDeleteView(DeleteView):
 	model       = Link
 	success_url = reverse_lazy('home')
 
-class VoteFormView(FormView):
-	form_class = VoteForm
+class JSONFormMixin(object):
+    def create_response(self, vdict=dict(), valid_form=True):
+        response = HttpResponse(json.dumps(vdict), content_type='application/json')
+        response.status = 200 if valid_form else 500
+        return response
 
-	def form_valid(self, form):
-		link = get_object_or_404(Link, pk=form.data['link'])
-		user = self.request.user
+class VoteFormBaseView(FormView):
+    form_class = VoteForm
 
-		prev_votes = Vote.objects.filter(voter=user, link=link)
-		has_voted  = (prev_votes.count() > 0)
+    def create_response(self, vdict=dict(), valid_form=True):
+        response = HttpResponse(json.dumps(vdict))
+        response.status = 200 if valid_form else 500
+        return response
 
-		if not has_voted:
-			# add vote
-			Vote.objects.create(voter=user, link=link)
-		else:
-			# delete vote
-			prev_votes[0].delete()
+    def form_valid(self, form):
+        link = get_object_or_404(Link, pk=form.data["link"])
+        user = self.request.user
+        prev_votes = Vote.objects.filter(voter=user, link=link)
+        has_voted = (len(prev_votes) > 0)
 
-		return redirect('home')
+        ret = {"success": 1}
+        if not has_voted:
+            # add vote
+            v = Vote.objects.create(voter=user, link=link)
+            ret["voteobj"] = v.id
+        else:
+            # delete vote
+            prev_votes[0].delete()
+            ret["unvoted"] = 1
+        return self.create_response(ret, True)
 
-	def form_invalid(self, form):
-		return redirect('home')
+    def form_invalid(self, form):
+        ret = {"success": 0, "form_errors": form.errors }
+        return self.create_response(ret, False)
+
+class VoteFormView(JSONFormMixin, VoteFormBaseView):
+    pass
