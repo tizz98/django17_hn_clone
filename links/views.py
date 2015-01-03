@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import get_user_model
-from django.views.generic.edit import UpdateView, CreateView, DeleteView
+from django.views.generic.edit import UpdateView, CreateView, DeleteView, FormView
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.comments.models import Comment
-from .models import Link, UserProfile
-from .forms import UserProfileForm, LinkForm
+from .models import Link, UserProfile, Vote
+from .forms import UserProfileForm, LinkForm, VoteForm
 
 class RandomGossipMixin(object):
 	def get_context_data(self, **kwargs):
@@ -61,3 +61,25 @@ class LinkUpdateView(UpdateView):
 class LinkDeleteView(DeleteView):
 	model       = Link
 	success_url = reverse_lazy('home')
+
+class VoteFormView(FormView):
+	form_class = VoteForm
+
+	def form_valid(self, form):
+		link = get_object_or_404(Link, pk=form.data['link'])
+		user = self.request.user
+
+		prev_votes = Vote.objects.filter(voter=user, link=link)
+		has_voted  = (prev_votes.count() > 0)
+
+		if not has_voted:
+			# add vote
+			Vote.objects.create(voter=user, link=link)
+		else:
+			# delete vote
+			prev_votes[0].delete()
+
+		return redirect('home')
+
+	def form_invalid(self, form):
+		return redirect('home')
