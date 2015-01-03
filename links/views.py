@@ -43,3 +43,6 @@ class LinkCreateView(CreateView):
 		f.save()
 
 		return super(CreateView, self).form_valid(form)
+
+class LinkDetailView(DetailView):
+	model = Link
