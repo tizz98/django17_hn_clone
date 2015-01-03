@@ -20,6 +20,16 @@ class LinkListView(RandomGossipMixin, ListView):
 	queryset    = Link.with_votes.all()
 	paginate_by = 3
 
+	def get_context_data(self, **kwargs):
+        context = super(LinkListView, self).get_context_data(**kwargs)
+        if self.request.user.is_authenticated():
+            voted = Vote.objects.filter(voter=self.request.user)
+            links_in_page = [link.id for link in context["object_list"]]
+            voted = voted.filter(link_id__in=links_in_page)
+            voted = voted.values_list('link_id', flat=True)
+            context["voted"] = voted
+        return context
+
 class UserProfileDetailView(DetailView):
 	model         = get_user_model()
 	slug_field    = 'username'
