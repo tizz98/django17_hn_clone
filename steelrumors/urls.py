@@ -19,5 +19,7 @@ urlpatterns = patterns('',
 	url(r'^link/update/(?P<pk>\d+)/$', auth(LinkUpdateView.as_view()), name='link_update'),
     url(r'^link/delete/(?P<pk>\d+)/$', auth(LinkDeleteView.as_view()), name='link_delete'),
 
+    url(r'^comments/', include('django.contrib.comments.urls')),
+
     url(r'^admin/', include(admin.site.urls)),
 )
