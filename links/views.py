@@ -50,3 +50,7 @@ class LinkDetailView(DetailView):
 class LinkUpdateview(UpdateView):
 	model      = Link
 	form_class = LinkForm
+
+class LinkDeleteView(DeleteView):
+	model       = Link
+	success_url = reverse_lazy('home')
