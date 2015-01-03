@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from links.views import LinkListView, UserProfileDetailView, UserProfileEditView, LinkCreateView, LinkDetailView, LinkUpdateView, LinkDeleteView
+from links.views import LinkListView, UserProfileDetailView, UserProfileEditView, LinkCreateView, LinkDetailView, LinkUpdateView, LinkDeleteView, VoteFormView
 from django.contrib.auth.decorators import login_required as auth
 
 urlpatterns = patterns('',
@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^link/delete/(?P<pk>\d+)/$', auth(LinkDeleteView.as_view()), name='link_delete'),
 
     url(r'^comments/', include('django.contrib.comments.urls')),
+    url(r'^vote/$', auth(VoteFormView.as_view()), name="vote"),
 
     url(r'^admin/', include(admin.site.urls)),
 )
