@@ -16,5 +16,8 @@ urlpatterns = patterns('',
 	url(r'^link/create/$', auth(LinkCreateView.as_view()), name="link_create"),
 	url(r'^link/(?P<pk>\d+)/$', LinkDetailView.as_view(), name='link_detail'),
 
+	url(r'^link/update/(?P<pk>\d+)/$', auth(LinkUpdateView.as_view()), name='link_update'),
+    url(r'^link/delete/(?P<pk>\d+)/$', auth(LinkDeleteView.as_view()), name='link_delete'),
+
     url(r'^admin/', include(admin.site.urls)),
 )
