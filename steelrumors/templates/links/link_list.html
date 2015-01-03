@@ -7,9 +7,9 @@
 <ol>
 {% endif %}
 {% for link in object_list %}
-    <li>
-    <a href="{{ link.url }}">
-      <strong>{{ link.title }}</strong>
+    <li> [{{ link.votes }}]
+		<a href="{% url 'link_detail' pk=link.pk %}">
+      	<strong>{{ link.title }}</strong>
     </a>
     </li>
 {% endfor %}
