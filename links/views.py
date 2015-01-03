@@ -3,10 +3,17 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth import get_user_model
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.contrib.comments.models import Comment
 from .models import Link, UserProfile
 from .forms import UserProfileForm, LinkForm
 
-class LinkListView(ListView):
+class RandomGossipMixin(object):
+	def get_context_data(self, **kwargs):
+		context = super(RandomGossipMixin, self).get_context_data(**kwargs)
+		context[u'randomquip'] = Comment.objects.order_by('?')[0]
+		return context
+
+class LinkListView(RandomGossipMixin, ListView):
 	model       = Link
 	queryset    = Link.with_votes.all()
 	paginate_by = 3
