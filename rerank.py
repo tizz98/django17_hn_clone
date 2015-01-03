@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# background job:
+#   $ (nohup python -u rerank.py&)
+#   $ tail -f nohup.out
 import os
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "steelrumors.settings")
